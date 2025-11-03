@@ -1,152 +1,141 @@
-## 1\. Entidades do Sistema de Backup (Lombok)
+# 💾 DataSync-Manager: O Seu Gerenciador Open Source de Backups Automatizados
 
-As entidades centrais para um sistema de gestão de backups são: o registro da operação de backup, a configuração de onde salvar e a configuração de quando e o que salvar.
+## ✨ Segurança e Controle Total sobre os Dados da Sua Organização
 
-### 1\. `BackupDestination` (Destino de Backup)
+[](https://www.google.com/search?q=https://github.com/KevynMurilo/DataSync-Manager/blob/main/LICENSE)
+[](https://www.google.com/search?q=%23%5Btecnologias-utilizadas%5D)
+[](https://www.google.com/search?q=%23%5Btecnologias-utilizadas%5D)
+[](https://www.google.com/search?q=%23%5Blicen%C3%A7a%5D)
 
-Representa onde o arquivo de backup será armazenado (local, S3, Google Cloud, etc.).
+O **DataSync-Manager** é uma solução **Open Source** completa e poderosa para a gestão centralizada de rotinas de backup de bancos de dados. Desenvolvido para oferecer **confiabilidade, flexibilidade e segurança**, ele automatiza o processo de extração (*dump*) de dados e os envia para múltiplos destinos, garantindo que a recuperação de desastres seja um processo simples e rápido.
 
-```java
-import lombok.Data;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+## 🎯 Proposta de Valor e Para que Serve
 
-/**
- * Representa um local de armazenamento configurado para guardar os backups.
- */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class BackupDestination {
-    private String id; // ID único, ex: "S3_PROD_BR"
-    private String name; // Nome amigável do destino
-    private BackupType type; // Tipo de destino (ENUM: LOCAL_DISK, AMAZON_S3, GCS, etc.)
-    private String endpoint; // URL/Caminho do bucket/diretório
-    private String region; // Região (para serviços de cloud)
-    private String accessKey; // Credencial de acesso (cuidado ao armazenar!)
-    private boolean isActive; // Se o destino está em uso
-}
+O projeto nasceu da necessidade de gerenciar, de forma eficiente e transparente, o backup de sistemas heterogêneos.
 
-public enum BackupType {
-    LOCAL_DISK,
-    AMAZON_S3,
-    GOOGLE_CLOUD_STORAGE,
-    FTP
-}
-```
-
-### 2\. `SystemConfiguration` (Configuração do Sistema)
-
-Representa as regras de automação e agendamento.
-
-```java
-import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
-/**
- * Configurações globais e de agendamento para a rotina de backup.
- */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class SystemConfiguration {
-    private Long id; // Geralmente 1L, pois há apenas uma configuração global
-    private String backupCronExpression; // Expressão CRON para agendamento (ex: "0 0 2 * * *")
-    private int retentionDays; // Quantidade de dias para reter backups (limpeza automática)
-    private boolean automaticCleanupEnabled; // Se a limpeza de retenção está ativa
-    private String sourcePath; // O que/onde deve ser backupeado (caminho no servidor/nome do banco)
-    private String defaultDestinationId; // O ID do BackupDestination padrão
-}
-```
-
-### 3\. `BackupRecord` (Registro de Backup)
-
-Representa o histórico de cada backup realizado, crucial para a visualização e aplicação de restaurações.
-
-```java
-import lombok.Data;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
-
-/**
- * Registro de um backup realizado, usado para visualização e restauração.
- */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class BackupRecord {
-    private Long id;
-    private String filename; // Nome exato do arquivo no destino
-    private LocalDateTime timestamp; // Data e hora da criação do backup
-    private Long sizeBytes; // Tamanho do arquivo em bytes
-    private String destinationId; // ID do destino onde o arquivo está (Foreign Key)
-    private BackupStatus status; // Enum: SUCCESS, FAILED, IN_PROGRESS
-    private String logSummary; // Breve resumo dos logs da operação
-}
-
-public enum BackupStatus {
-    SUCCESS,
-    FAILED,
-    IN_PROGRESS
-}
-```
+  * **Evite Perdas de Dados:** Configure backups automáticos para nunca mais se preocupar com falhas humanas ou de *hardware*.
+  * **Centralização:** Administre todas as suas fontes de dados (**PostgreSQL, MySQL, H2, Oracle, SQL Server, MariaDB, MongoDB**) e destinos de armazenamento (Local, Nuvem, FTP) a partir de um único painel de controle.
+  * **Conformidade e Auditoria:** Mantenha um histórico detalhado (*log*) de todas as execuções, garantindo a rastreabilidade e o cumprimento de políticas de retenção.
 
 -----
 
-## 2\. Documentação Completa do Fluxo (Workflow)
+## 🚀 Funcionalidades Chave
 
-O sistema pode ser organizado em 4 módulos de serviço e 3 fluxos de operação principais, focando na **automação** e na usabilidade para **visualizar/aplicar** restaurações.
+Com uma **Interface de Usuário (Frontend em Angular)** intuitiva e um **Motor de Execução (Backend em Spring Boot)** assíncrono e resiliente, o DataSync-Manager oferece:
 
-### A. Módulos de Serviço
+### 1\. Suporte a Múltiplos Bancos de Dados
 
-| Módulo | Responsabilidade |
+| Tipo de Banco | Compatibilidade |
 | :--- | :--- |
-| **Scheduler/Task Manager** | Agenda a rotina de backup (com base no `SystemConfiguration.backupCronExpression`) e a rotina de limpeza de retenção. |
-| **Backup Service** | Orquestra as operações: chama a extração, o `StorageManager` e o `Repository`. É o *core* da lógica. |
-| **Storage Manager** | Abstrai a comunicação com o destino. Responsável por `upload`, `download`, `list` e `delete` o arquivo físico em diferentes `BackupDestination` (S3, disco, etc.). |
-| **Repository** | Persiste/Consulta as entidades (`BackupRecord`, `SystemConfiguration`, `BackupDestination`) em um banco de dados relacional. |
+| **SQL** | PostgreSQL, MySQL, H2, Oracle, SQL Server, MariaDB |
+| **NoSQL** | MongoDB |
 
-### B. Fluxos de Operação
+### 2\. Multi-Destino de Backup
 
-#### Fluxo 1: Automação e Criação de Backup (O "Fazer")
+Você pode enviar um único backup para múltiplos locais simultaneamente, garantindo redundância (a famosa regra 3-2-1):
 
-Este é o fluxo que a automação (`Scheduler`) executa.
+  * **Cloud Storage:** **Amazon S3** e **Google Cloud Storage (GCS)**, com criptografia das credenciais.
+  * **Protocolos:** **FTP** (File Transfer Protocol).
+  * **Local/Rede:** Armazenamento em disco local ou em *endpoints* de rede (Local Disk).
 
-| Etapa | Descrição da Ação | Módulo Envolvido |
+### 3\. Agendamento e Execução
+
+  * **Agendamento Flexível:** Defina rotinas de backup como **Diárias**, **Semanais** ou **Manuais**.
+  * **Monitoramento em Tempo Real:** Dashboard (via **WebSocket**) para acompanhar o *status* das execuções e a saúde geral do sistema.
+  * **Restauração Simples:** Funcionalidade de um clique para iniciar o processo de **restauração** a partir de qualquer registro de histórico.
+
+### 4\. Segurança e Notificações
+
+  * **Criptografia de Credenciais:** As chaves de acesso e senhas de banco de dados são criptografadas no banco de dados interno (usando `CryptoConverter` em Spring).
+  * **Notificações por E-mail:** Configure conexões **SMTP** e defina políticas de notificação (**Sempre** ou **Apenas em Caso de Falha**) para os *jobs* críticos.
+  * **Controle de Acesso:** Sistema de autenticação robusto (via **JWT** e **Spring Security**) com gestão de usuários e obrigatoriedade de troca de senha inicial (`mustChangePassword`).
+
+-----
+
+## 🛠️ Tecnologias Principais
+
+| Componente | Tecnologia | Detalhes Relevantes |
 | :--- | :--- | :--- |
-| **1. Início Agendado** | O `Scheduler` dispara a tarefa com base na CRON e carrega o `SystemConfiguration`. | Scheduler, Repository |
-| **2. Preparação do Registro**| O `BackupService` cria um novo `BackupRecord` com `status: IN_PROGRESS`. | Backup Service, Repository |
-| **3. Extração dos Dados** | O `BackupService` executa a lógica de extração dos dados (ex: roda o `pg_dump` para PostgreSQL, ou comprime o diretório). | Backup Service (lógica de extração) |
-| **4. Upload para o Destino** | O `BackupService` aciona o `StorageManager` para realizar o *upload* do arquivo gerado para o destino (`defaultDestinationId`). | Backup Service, Storage Manager |
-| **5. Finalização e Log** | Se o upload for bem-sucedido, o `BackupService` atualiza o `BackupRecord` para `status: SUCCESS`, incluindo `sizeBytes` e `filename`. Se falhar em qualquer ponto, atualiza para `status: FAILED` e registra o erro em `logSummary`. | Backup Service, Repository |
-| **6. Limpeza de Retenção** | (Fluxo secundário agendado) O `Scheduler` executa a limpeza, pedindo ao `BackupService` para buscar e deletar registros mais antigos que `retentionDays` no `Repository` e os arquivos correspondentes no `Storage Manager`. | Scheduler, Backup Service, Repository, Storage Manager |
+| **Backend** | **Spring Boot** (Java) | Fornece a API RESTful, o motor de agendamento e a lógica de comunicação com os bancos e *storages*. Utiliza **Spring Security** para autenticação (JWT) e **JPA/Hibernate**. |
+| **Frontend** | **Angular** | Interface de usuário (SPA - Single Page Application) moderna, interativa e responsiva para gerenciar as configurações. |
+| **Comunicação** | **WebSocket / STOMP** | Utilizado para *push* de notificações e *status* de execução em tempo real para o *dashboard*. |
+| **Documentação API** | **OpenAPI (Swagger)** | Documentação automática da API para facilitar o desenvolvimento e integração. |
+| **Storage Connectors**| **AWS SDK (S3-Compatible)** e **Apache Commons Net (FTP)** | Bibliotecas utilizadas para a comunicação segura com serviços de nuvem e FTP. |
 
-#### Fluxo 2: Visualização de Backups (O "Ver")
+-----
 
-Este fluxo alimenta a interface do usuário para que os backups possam ser vistos e selecionados.
+## ⚙️ Como Usar e Configurar
 
-| Etapa | Descrição da Ação | Módulo Envolvido |
-| :--- | :--- | :--- |
-| **1. Requisição da UI** | O usuário solicita a lista de backups disponíveis. | Frontend/API |
-| **2. Consulta de Registros** | A API de Backend consulta o `Repository` por todos os `BackupRecord`s (opcionalmente filtrando por data ou status). | Repository |
-| **3. Exibição** | A UI recebe a lista e exibe, destacando: `filename`, `timestamp`, `status` e `sizeBytes`. Botões de ação (*"Restaurar"*) são ligados ao `id` do `BackupRecord`. | Frontend/API |
-| **4. Detalhes do Log** | O usuário pode clicar em um registro para ver o `logSummary` completo. | Repository |
+### 1\. Pré-requisitos
 
-#### Fluxo 3: Aplicação/Restauração de Backup (O "Aplicar")
+Certifique-se de ter instalado:
 
-Este é o fluxo de *restore* acionado pelo usuário, revertendo o sistema para um estado anterior.
+  * **Java JDK [Versão Compatível com Spring Boot]**
+  * **Node.js / NPM / Angular CLI**
+  * **Docker e Docker Compose** (Recomendado para ambientes de desenvolvimento/produção)
 
-| Etapa | Descrição da Ação | Módulo Envolvido |
-| :--- | :--- | :--- |
-| **1. Seleção e Confirmação**| O usuário seleciona um `BackupRecord` (o ID do backup a ser aplicado). | Frontend/API |
-| **2. Verificação de Pré-requisitos** | O `BackupService` verifica se a operação de restauração pode prosseguir (Ex: se os serviços estão parados ou o banco de dados está no modo correto). | Backup Service |
-| **3. Download do Arquivo** | O `BackupService` usa o `destinationId` e `filename` do registro selecionado para instruir o `StorageManager` a baixar o arquivo. | Backup Service, Storage Manager |
-| **4. Execução da Restauração**| O `BackupService` executa a rotina de restauração usando o arquivo baixado e o `sourcePath` como destino. | Backup Service (lógica de restauração) |
-| **5. Finalização** | Após a restauração, o `BackupService` reinicia os serviços e registra o sucesso da operação (pode ser em uma tabela separada de `RestoreRecord`). | Backup Service |
-| **6. Notificação** | Envia alerta de **RESTAURAÇÃO CONCLUÍDA** (ou falha) por e-mail/Slack. | Notification Service |
+### 2\. Configuração de Variáveis de Ambiente
+
+O projeto requer chaves de segurança críticas. É fundamental configurar a chave de criptografia AES no Backend para proteger credenciais sensíveis (senhas de banco e chaves de acesso S3/GCS):
+
+> **Atenção:** A chave `app.crypto.key` deve ter **exatamente 16 caracteres** (padrão AES-128).
+>
+> ```ini
+> # Exemplo em application.properties/application.yml
+> app.crypto.key=[SUA_CHAVE_SECRETA_DE_16_CARACTERES_UNICA]
+> ```
+
+### 3\. Execução (via Docker Compose)
+
+A maneira mais prática é usar o Docker Compose para subir o ambiente completo:
+
+```bash
+# 1. Ajuste o arquivo docker-compose.yml e .env com suas configurações
+# 2. Suba os serviços:
+docker-compose up -d --build
+```
+
+  * **Acesso ao Frontend:** `http://localhost:[Porta Angular, ex: 4200]`
+  * **Acesso ao Backend/API:** `http://localhost:[Porta Spring, ex: 8080]/api/auth/login`
+
+### 4\. Configuração Inicial pelo Frontend
+
+Após o acesso, siga estas etapas no painel do **Angular**:
+
+1.  **Crie uma Configuração de E-mail (Opcional, mas Recomendado):** Vá em **Configurações \> E-mail** para adicionar seus dados SMTP. Isso é essencial para receber alertas de falha.
+2.  **Configure o Destino(s) de Backup:** Vá em **Configurações \> Destinos**. Adicione seus *endpoints* S3, GCS, FTP ou um caminho de disco local. Use o botão **"Testar Conexão"** para validar.
+3.  **Configure a(s) Fonte(s) de Backup:** Vá em **Configurações \> Fontes**. Adicione os dados de conexão do seu banco (Host, User, Password, Caminho da Ferramenta de *Dump* como `pg_dump` ou `mysqldump`). Use o **"Testar Conexão"** para validar o acesso ao banco.
+4.  **Crie um Job de Backup:** Vá em **Jobs de Backup**. Crie um novo *job*, associe uma **Fonte** e um ou mais **Destinos**, defina o **Agendamento** e a **Política de Notificação**.
+
+-----
+
+## 🤝 Contribuição e Comunidade (Open Source)
+
+O **DataSync-Manager** foi construído como um projeto *open source* e depende da sua contribuição para evoluir\!
+
+### Como Ajudar
+
+  * **Novos Bancos de Dados:** Adicionar suporte a novos tipos de bancos (ex: SQLite, Redis).
+  * **Novos Destinos:** Integrar outros serviços de *Cloud* (ex: Azure Blob Storage, Dropbox).
+  * **Melhorias na Interface:** Aprimorar a usabilidade e o design do painel em Angular.
+  * **Documentação:** Melhorar os guias de instalação e uso.
+
+### Passos para Contribuir
+
+1.  Faça um *fork* do projeto: `https://github.com/KevynMurilo/DataSync-Manager/fork`
+2.  Crie uma nova *branch* para sua funcionalidade (`git checkout -b feat/melhoria-do-dashboard`).
+3.  Implemente sua alteração e faça o *commit* (`git commit -m 'feat: Adiciona gráfico de taxa de sucesso'`).
+4.  Abra um **Pull Request** para a *branch* principal (`main`), descrevendo claramente a sua contribuição.
+
+-----
+
+## 📄 Licença
+
+Este projeto é *open source* e está licenciado sob a **[INSERIR LICENÇA AQUI, ex: MIT License]**. Consulte o arquivo [LICENSE](https://www.google.com/search?q=LICENSE) na raiz do repositório para mais detalhes.
+
+## 🧑‍💻 Autor e Mantenedor
+
+| [\<img src="https://avatars.githubusercontent.com/u/SEU\_ID\_DO\_GITHUB?v=4" width="100px;"/\>](https://www.google.com/search?q=https://github.com/KevynMurilo) | |
+| :--- | :--- |
+| **Kevyn Murilo** | Criador e Mantenedor Principal do DataSync-Manager. |
+| | **GitHub:** [@KevynMurilo](https://www.google.com/search?q=https://github.com/KevynMurilo) |
