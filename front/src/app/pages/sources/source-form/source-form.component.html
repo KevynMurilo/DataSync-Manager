@@ -1,0 +1,137 @@
+<form [formGroup]="sourceForm" (ngSubmit)="saveSource()"
+      class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden flex flex-col h-full">
+
+  <div class="p-6 space-y-6 overflow-y-auto">
+
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+      {{ isEditMode ? 'Editar Fonte de Dados' : 'Nova Fonte de Dados' }}
+    </h1>
+
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2 mb-4">Informações Básicas</h3>
+      <div class="space-y-6">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome de Identificação</label>
+          <input type="text" id="name" formControlName="name"
+                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                 placeholder="Ex: Banco de Dados Principal (PostgreSQL)">
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Um nome amigável para esta fonte de dados.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="databaseType" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fonte de Dados (Tipo)</label>
+            <select id="databaseType" formControlName="databaseType"
+                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3">
+              <option [ngValue]="null" disabled>Selecione o tipo de banco...</option>
+              <option *ngFor="let type of databaseTypes" [value]="type">{{ type }}</option>
+            </select>
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">O tipo de banco de dados.</p>
+          </div>
+          <div>
+            <label for="dbDumpToolPath" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Caminho da Ferramenta de Dump</label>
+            <input type="text" id="dbDumpToolPath" formControlName="dbDumpToolPath"
+                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                   placeholder="Ex: /usr/bin/pg_dump">
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">O caminho absoluto para o utilitário de dump.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="selectedDbType" class="pt-6 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Configuração da Conexão ({{ selectedDbType }})</h3>
+      <div class="space-y-6">
+
+        <div *ngIf="isDatabaseSource(selectedDbType)" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="dbHost" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Host</label>
+              <input type="text" id="dbHost" formControlName="dbHost"
+                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                     placeholder="localhost">
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">O IP ou endereço do servidor. Ex: 10.1.2.12</p>
+            </div>
+            <div>
+              <label for="dbPort" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Porta</label>
+              <input type="number" id="dbPort" formControlName="dbPort"
+                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                     placeholder="5432">
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Deixe em branco para a porta padrão (ex: 5432 para Postgres).</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="dbName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome do Banco de Dados</label>
+            <input type="text" id="dbName" formControlName="dbName"
+                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                   placeholder="banco_de_dados_producao">
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">O nome exato do banco de dados que sofrerá o dump.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="dbUser" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Usuário do Banco</label>
+              <input type="text" id="dbUser" formControlName="dbUser"
+                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                     placeholder="postgres_user">
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Usuário com permissões de backup.</p>
+            </div>
+            <div>
+              <label for="dbPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Senha do Banco</label>
+              <input type="password" id="dbPassword" formControlName="dbPassword"
+                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                     [placeholder]="isEditMode ? 'Deixe em branco para não alterar' : '••••••••'">
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">A senha para o usuário do banco.</p>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isFilePathSource(selectedDbType)" class="space-y-6">
+          <div>
+            <label for="sourcePath" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Caminho do Arquivo de Origem</label>
+            <input type="text" id="sourcePath" formControlName="sourcePath"
+                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                   placeholder="/opt/app/data/minha_base.mv.db">
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Para bancos (como H2), forneça o caminho completo para o arquivo <strong>.mv.db</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="testMessage" class="px-6 py-3"
+       [ngClass]="isTestSuccess ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'">
+    <p [ngClass]="isTestSuccess ? 'text-green-700 dark:text-green-200' : 'text-red-700 dark:text-red-200'" 
+       class="text-sm font-medium">
+      {{ testMessage }}
+    </p>
+  </div>
+
+  <div class="flex justify-between items-center gap-4 px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-auto">
+    <button
+      type="button"
+      (click)="onTestConnection()"
+      [disabled]="isTesting"
+      class="flex items-center justify-center px-6 py-2.5 text-sm font-medium bg-gray-600 text-white rounded-md shadow-sm hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-wait"
+    >
+      <span *ngIf="isTesting" class="material-icons-outlined animate-spin text-lg -ml-1 mr-2">sync</span>
+      <span *ngIf="!isTesting" class="material-icons-outlined text-lg -ml-1 mr-2">cable</span>
+      {{ isTesting ? 'Testando...' : 'Testar Conexão' }}
+    </button>
+    
+    <div class="flex gap-4">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white dark:bg-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600"
+      >
+        Cancelar
+      </button>
+      <button type="submit" [disabled]="sourceForm.invalid"
+              class="flex items-center justify-center px-6 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 disabled:bg-gray-400">
+        {{ isEditMode ? 'Atualizar Fonte' : 'Salvar Fonte' }}
+      </button>
+    </div>
+  </div>
+</form>

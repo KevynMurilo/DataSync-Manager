@@ -1,0 +1,135 @@
+<form [formGroup]="jobForm" (ngSubmit)="saveJob()"
+      class="flex flex-col h-full">
+
+  <div class="p-6 space-y-6 overflow-y-auto">
+
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+      {{ isEditMode ? 'Editar Job' : 'Novo Job' }}
+    </h1>
+
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2 mb-4">Informações Básicas</h3>
+      <div class="space-y-6">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome do Job</label>
+          <input type="text" id="name" formControlName="name"
+                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                 placeholder="Ex: Backup Diário - Banco Principal">
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Um nome amigável para este job de backup.</p>
+        </div>
+        
+        <div>
+          <label for="sourceId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fonte de Dados</label>
+          <select id="sourceId" formControlName="sourceId"
+                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3">
+            <option [ngValue]="null" disabled>Selecione a fonte...</option>
+            <option *ngFor="let source of sources$ | async" [value]="source.id">{{ source.name }} ({{ source.databaseType }})</option>
+          </select>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">O que você deseja fazer backup.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Agendamento e Retenção</h3>
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="scheduleType" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Frequência</label>
+            <select id="scheduleType" formControlName="scheduleType"
+                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3">
+              <option *ngFor="let type of scheduleTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+           <div>
+            <label for="backupTime" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Horário (HH:mm)</label>
+            <input type="time" id="backupTime" formControlName="backupTime"
+                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3">
+          </div>
+        </div>
+         <div>
+            <label for="retentionDays" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Dias de Retenção</label>
+            <input type="number" id="retentionDays" formControlName="retentionDays"
+                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3">
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Número de dias que os backups deste job serão mantidos.</p>
+          </div>
+      </div>
+    </div>
+
+    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Destinos</h3>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Para onde o backup será enviado. Você pode selecionar múltiplos destinos.</p>
+      <div class="mt-4 space-y-4" formArrayName="destinations">
+        <label *ngFor="let control of destinationsFormArray.controls; let i = index" 
+               [formGroupName]="i" 
+               class="relative flex items-start p-4 border rounded-md dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+          <div class="flex items-center h-5">
+            <input [formControlName]="'selected'" type="checkbox"
+                   class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500 dark:bg-gray-700">
+          </div>
+          <div class="ml-3 text-sm">
+            <span class="font-medium text-gray-700 dark:text-gray-300">{{ control.value.name }}</span>
+            <p class="text-gray-500 dark:text-gray-400">{{ allDestinations[i].type }} - {{ allDestinations[i].endpoint }}</p>
+          </div>
+        </label>
+      </div>
+    </div>
+    
+    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Notificações por E-mail</h3>
+      <div class="space-y-6">
+        <div>
+          <label for="notificationPolicy" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quando Notificar?</label>
+          <select id="notificationPolicy" formControlName="notificationPolicy"
+                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3">
+            <option *ngFor="let policy of notificationPolicies" [value]="policy">{{ policy }}</option>
+          </select>
+        </div>
+        
+        <div>
+          <label for="notificationRecipients" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Destinatários</label>
+          <input type="text" id="notificationRecipients" formControlName="notificationRecipients"
+                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3 disabled:bg-gray-200 dark:disabled:bg-gray-700/50"
+                 placeholder="ti@empresa.com, gerente@empresa.com">
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Lista de e-mails separados por vírgula ou espaço.</p>
+        </div>
+
+        <div>
+          <label for="emailConfigId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Enviar Usando (Servidor SMTP)</label>
+          <select id="emailConfigId" formControlName="emailConfigId"
+                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3 disabled:bg-gray-200 dark:disabled:bg-gray-700/50">
+            <option [ngValue]="null" disabled>Selecione a configuração de envio...</option>
+            <option *ngFor="let config of emailConfigs$ | async" [value]="config.id">{{ config.name }} ({{ config.username }})</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div class="relative flex items-start">
+        <div class="flex items-center h-5">
+          <input id="isActive" formControlName="isActive" type="checkbox"
+                 class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:focus:ring-offset-gray-800">
+        </div>
+        <div class="ml-3 text-sm">
+          <label for="isActive" class="font-medium text-gray-700 dark:text-gray-300">Job Ativo</label>
+          <p class="text-gray-500 dark:text-gray-400">Se inativo, o job não será executado pelo agendador.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end items-center gap-4 px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-auto flex-shrink-0">
+    <button
+      type="button"
+      (click)="cancel()"
+      class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white dark:bg-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600"
+    >
+      Cancelar
+    </button>
+    <button type="submit"
+            class="flex items-center justify-center px-6 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 disabled:bg-gray-400">
+      {{ isEditMode ? 'Atualizar Job' : 'Salvar Job' }}
+    </button>
+  </div>
+</form>

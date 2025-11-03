@@ -1,0 +1,15 @@
+<div *ngIf="isVisible" 
+     class="fixed inset-0 z-40 flex items-center justify-center p-4" 
+     aria-labelledby="modal-title" 
+     role="dialog" 
+     aria-modal="true">
+
+  <div (click)="closeModal()" 
+       class="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" 
+       aria-hidden="true">
+  </div>
+
+  <div class="relative z-50 w-full max-w-4xl flex flex-col max-h-full bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+    <ng-content></ng-content>
+  </div>
+</div>

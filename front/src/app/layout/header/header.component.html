@@ -1,0 +1,12 @@
+<header class="h-16 bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700">
+  <div class="flex items-center justify-end h-full px-4 sm:px-6 lg:px-8">
+    <button
+      (click)="toggleTheme()"
+      aria-label="Toggle theme"
+      class="flex items-center justify-center h-10 w-10 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+    >
+      <span *ngIf="!themeService.isDarkMode()" class="material-icons-outlined">dark_mode</span>
+      <span *ngIf="themeService.isDarkMode()" class="material-icons-outlined">light_mode</span>
+    </button>
+  </div>
+</header>

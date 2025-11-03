@@ -1,0 +1,91 @@
+<form [formGroup]="configForm" (ngSubmit)="saveConfig()"
+      class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden flex flex-col h-full">
+
+  <div class="p-6 space-y-6 overflow-y-auto">
+
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+      {{ isEditMode ? 'Editar Configuração SMTP' : 'Nova Configuração SMTP' }}
+    </h1>
+
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2 mb-4">Configuração do Servidor</h3>
+      <div class="space-y-6">
+        
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome de Identificação</label>
+          <input type="text" id="name" formControlName="name"
+                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                 placeholder="Ex: Conta Gmail Pessoal">
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Um nome amigável para este servidor.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="host" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Host SMTP</label>
+            <input type="text" id="host" formControlName="host"
+                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                   placeholder="smtp.gmail.com">
+          </div>
+          <div>
+            <label for="port" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Porta</label>
+            <input type="number" id="port" formControlName="port"
+                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                   placeholder="587">
+          </div>
+        </div>
+
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Usuário (E-mail Remetente)</label>
+          <input type="email" id="username" formControlName="username"
+                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                 placeholder="seu.email@gmail.com">
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">O e-mail que aparecerá como remetente.</p>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
+          <input type="password" id="password" formControlName="password"
+                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 sm:text-base p-3"
+                 [placeholder]="isEditMode ? 'Deixe em branco para não alterar' : '••••••••'">
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">A senha do e-mail (ou senha de app). Será armazenada criptografada.</p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="testMessage" class="px-6 py-3"
+       [ngClass]="isTestSuccess ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'">
+    <p [ngClass]="isTestSuccess ? 'text-green-700 dark:text-green-200' : 'text-red-700 dark:text-red-200'" 
+       class="text-sm font-medium">
+      {{ testMessage }}
+    </p>
+  </div>
+
+  <div class="flex justify-between items-center gap-4 px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-auto">
+    <button
+      type="button"
+      (click)="onTestConnection()"
+      [disabled]="isTesting"
+      class="flex items-center justify-center px-6 py-2.5 text-sm font-medium bg-gray-600 text-white rounded-md shadow-sm hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-wait"
+    >
+      <span *ngIf="isTesting" class="material-icons-outlined animate-spin text-lg -ml-1 mr-2">sync</span>
+      <span *ngIf="!isTesting" class="material-icons-outlined text-lg -ml-1 mr-2">cable</span>
+      {{ isTesting ? 'Testando...' : 'Testar Conexão' }}
+    </button>
+    
+    <div class="flex gap-4">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white dark:bg-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600"
+      >
+        Cancelar
+      </button>
+      <button type="submit" [disabled]="configForm.invalid"
+              class="flex items-center justify-center px-6 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 disabled:bg-gray-400">
+        {{ isEditMode ? 'Atualizar' : 'Salvar' }}
+      </button>
+    </div>
+  </div>
+</form>
