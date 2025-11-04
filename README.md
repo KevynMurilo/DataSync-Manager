@@ -148,7 +148,6 @@ Este projeto é *open source* e está licenciado sob a **[INSERIR LICENÇA AQUI,
 
 ## 🧑‍💻 Autor e Mantenedor
 
-| [\<img src="https://avatars.githubusercontent.com/u/SEU\_ID\_DO\_GITHUB?v=4" width="100px;"/\>](https://www.google.com/search?q=https://github.com/KevynMurilo) | |
-| :--- | :--- |
-| **Kevyn Murilo** | Criador e Mantenedor Principal do DataSync-Manager. |
-| | **GitHub:** [@KevynMurilo](https://www.google.com/search?q=https://github.com/KevynMurilo) |
+| [<img src="https://avatars.githubusercontent.com/u/132490286?v=4" width="100px;"/>](https://github.com/KevynMurilo) |
+| :---: |
+| **Kevyn Murilo**<br>Criador e Mantenedor Principal do DataSync-Manager.<br>[GitHub: @KevynMurilo](https://github.com/KevynMurilo) |
