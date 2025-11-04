@@ -325,3 +325,48 @@ org.springframework.security.core.userdetails.UsernameNotFoundException: Usuári
 	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
 	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
 
+2025-11-03T19:33:59.839-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Starting Application using Java 17.0.16 with PID 11245 (/home/kevyn/Documentos/Project/DataSync-Manager/back/target/classes started by kevyn in /home/kevyn/Documentos/Project/DataSync-Manager/back)
+2025-11-03T19:33:59.842-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : No active profile set, falling back to 1 default profile: "default"
+2025-11-03T19:34:02.959-03:00  WARN 11245 --- [api-backup] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-03T19:34:05.587-03:00  WARN 11245 --- [api-backup] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-03T19:34:06.353-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Started Application in 7.097 seconds (process running for 7.675)
+2025-11-03T19:34:06.575-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : ************************************************************
+2025-11-03T19:34:06.575-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : NENHUM USUÁRIO ENCONTRADO. CRIADO USUÁRIO PADRÃO:
+2025-11-03T19:34:06.575-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : Usuário: admin@admin.com
+2025-11-03T19:34:06.576-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : Senha:   admin
+2025-11-03T19:34:06.576-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : ************************************************************
+2025-11-03T19:38:31.462-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Starting Application using Java 17.0.16 with PID 11245 (/home/kevyn/Documentos/Project/DataSync-Manager/back/target/classes started by kevyn in /home/kevyn/Documentos/Project/DataSync-Manager/back)
+2025-11-03T19:38:31.463-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : No active profile set, falling back to 1 default profile: "default"
+2025-11-03T19:38:32.044-03:00  WARN 11245 --- [api-backup] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-03T19:38:32.134-03:00  WARN 11245 --- [api-backup] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-03T19:38:32.331-03:00  WARN 11245 --- [api-backup] [restartedMain] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 0272c95a-97c9-409a-a37e-37975bfbe2a9
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-11-03T19:38:32.398-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Started Application in 0.973 seconds (process running for 273.72)
+2025-11-03T19:38:35.305-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Starting Application using Java 17.0.16 with PID 11245 (/home/kevyn/Documentos/Project/DataSync-Manager/back/target/classes started by kevyn in /home/kevyn/Documentos/Project/DataSync-Manager/back)
+2025-11-03T19:38:35.306-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : No active profile set, falling back to 1 default profile: "default"
+2025-11-03T19:38:35.892-03:00  WARN 11245 --- [api-backup] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-03T19:38:36.270-03:00  WARN 11245 --- [api-backup] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-03T19:38:36.428-03:00  INFO 11245 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Started Application in 1.156 seconds (process running for 277.75)
+2025-11-03T19:38:36.494-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : ************************************************************
+2025-11-03T19:38:36.494-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : NENHUM USUÁRIO ENCONTRADO. CRIADO USUÁRIO PADRÃO:
+2025-11-03T19:38:36.494-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : Usuário: admin@admin.com
+2025-11-03T19:38:36.494-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : Senha:   admin
+2025-11-03T19:38:36.494-03:00  INFO 11245 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : ************************************************************
+2025-11-03T20:20:28.790-03:00  INFO 54139 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Starting Application using Java 17.0.16 with PID 54139 (/home/kevyn/Documentos/Project/DataSync-Manager/back/target/classes started by kevyn in /home/kevyn/Documentos/Project/DataSync-Manager/back)
+2025-11-03T20:20:28.795-03:00  INFO 54139 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : No active profile set, falling back to 1 default profile: "default"
+2025-11-03T20:20:32.551-03:00  WARN 54139 --- [api-backup] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-03T20:20:35.659-03:00  WARN 54139 --- [api-backup] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-03T20:20:36.548-03:00  INFO 54139 --- [api-backup] [restartedMain] br.gov.formosa.backup.Application        : Started Application in 8.47 seconds (process running for 9.075)
+2025-11-03T20:20:36.755-03:00  INFO 54139 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : ************************************************************
+2025-11-03T20:20:36.755-03:00  INFO 54139 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : NENHUM USUÁRIO ENCONTRADO. CRIADO USUÁRIO PADRÃO:
+2025-11-03T20:20:36.756-03:00  INFO 54139 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : Usuário: admin@admin.com
+2025-11-03T20:20:36.756-03:00  INFO 54139 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : Senha:   admin
+2025-11-03T20:20:36.756-03:00  INFO 54139 --- [api-backup] [restartedMain] b.g.f.b.s.c.ApplicationStartupRunner     : ************************************************************
+2025-11-03T20:24:42.091-03:00  WARN 54139 --- [api-backup] [http-nio-8082-exec-10] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
