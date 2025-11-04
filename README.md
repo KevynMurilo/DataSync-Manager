@@ -2,11 +2,6 @@
 
 ## ✨ Segurança e Controle Total sobre os Dados da Sua Organização
 
-[](https://www.google.com/search?q=https://github.com/KevynMurilo/DataSync-Manager/blob/main/LICENSE)
-[](https://www.google.com/search?q=%23%5Btecnologias-utilizadas%5D)
-[](https://www.google.com/search?q=%23%5Btecnologias-utilizadas%5D)
-[](https://www.google.com/search?q=%23%5Blicen%C3%A7a%5D)
-
 O **DataSync-Manager** é uma solução **Open Source** completa e poderosa para a gestão centralizada de rotinas de backup de bancos de dados. Desenvolvido para oferecer **confiabilidade, flexibilidade e segurança**, ele automatiza o processo de extração (*dump*) de dados e os envia para múltiplos destinos, garantindo que a recuperação de desastres seja um processo simples e rápido.
 
 ## 🎯 Proposta de Valor e Para que Serve
@@ -91,14 +86,32 @@ A maneira mais prática é usar o Docker Compose para subir o ambiente completo:
 
 ```bash
 # 1. Ajuste o arquivo docker-compose.yml e .env com suas configurações
-# 2. Suba os serviços:
+# 2. Suba os serviços (o Docker irá construir e iniciar tudo):
 docker-compose up -d --build
 ```
 
   * **Acesso ao Frontend:** `http://localhost:[Porta Angular, ex: 4200]`
   * **Acesso ao Backend/API:** `http://localhost:[Porta Spring, ex: 8080]/api/auth/login`
 
-### 4\. Configuração Inicial pelo Frontend
+### 4\. Configuração Inicial Pós-Execução
+
+Na primeira inicialização, o sistema cria automaticamente um usuário administrativo.
+
+| Usuário Padrão | Detalhe |
+| :--- | :--- |
+| **E-mail:** `admin@admin.com` | Usuário para o primeiro acesso. |
+| **Senha:** `admin` | Senha inicial. |
+
+> **Aviso de Segurança:** Por segurança, este usuário inicial é forçado a trocar email e senha no primeiro login. Certifique-se de realizar esta troca imediatamente.
+
+### 5\. Banco de Dados Interno (H2)
+
+Para ambientes de **desenvolvimento e teste**, o Backend utiliza o banco de dados em memória **H2** para armazenar todas as configurações de *jobs*, fontes, destinos e usuários.
+
+  * **Persistência:** As configurações são salvas em um arquivo no volume do Docker (ou no diretório do usuário local, dependendo da sua configuração de volume no `docker-compose.yml`).
+  * **Produção:** Para ambientes de **produção**, é altamente recomendável migrar para um banco de dados robusto e persistente, como **PostgreSQL** ou **MySQL**, alterando a configuração no `application.properties/yml`.
+
+### 6\. Configuração no Painel do Frontend
 
 Após o acesso, siga estas etapas no painel do **Angular**:
 
